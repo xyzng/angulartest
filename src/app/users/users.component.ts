@@ -56,9 +56,8 @@ export class UsersComponent implements OnInit, OnDestroy {
                                            ).subscribe(() => {
                                               this.onFetchUsers();
 
-                                              // clear and switch back the submit mode to `add`
+                                              // clear form when adding user
                                               this.userForm.reset();
-                                              this.submitMode = 'add';
                                           }
                                         );
     }

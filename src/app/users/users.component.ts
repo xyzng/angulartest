@@ -53,8 +53,14 @@ export class UsersComponent implements OnInit, OnDestroy {
                                            userData.last_name,
                                            userData.email,
                                            userData.phone,
-                                           );
-      this.userForm.reset();
+                                           ).subscribe(() => {
+                                              this.onFetchUsers();
+
+                                              // clear and switch back the submit mode to `add`
+                                              this.userForm.reset();
+                                              this.submitMode = 'add';
+                                          }
+                                        );
     }
 
     if(this.submitMode == 'edit') {
@@ -125,6 +131,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     // Send Http request to endpoint and drop users data
     this.usersService.deleteUsers().subscribe(() => {
       this.loadedUsers = [];
+      this.userForm.reset();
     });
   }
 

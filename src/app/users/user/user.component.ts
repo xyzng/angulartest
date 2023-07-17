@@ -12,7 +12,14 @@ import { UsersService } from '../users.service';
 })
 export class UserComponent implements OnInit {
 
-  userDetail = [];
+  /*userData = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  };*/
+
+  userData: any = [];
 
   private routeSub: Subscription;
 
@@ -28,11 +35,8 @@ export class UserComponent implements OnInit {
       
       // get the users on component init
       this.usersService.fetchSingleUser(userId).subscribe(
-        user => {
-          this.userDetail['firstName'] = user['first_name'];
-          this.userDetail['lastName'] = user['last_name'];
-          this.userDetail['emailAddress'] = user['email'];
-          this.userDetail['phone'] = user['phone'];
+        userRes => {          
+          this.userData = userRes;
         }
       );
 

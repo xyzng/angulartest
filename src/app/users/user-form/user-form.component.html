@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-12 col-sm-offset-1 col-md-offset-2">
+      <form class="row g-3" [formGroup]="userForm" (ngSubmit)="onUserFormSubmit()">
+		  	<div class="col-md-6">
+			    <label for="inputFirstName" class="form-label">First Name</label>
+			    <input 
+			    	type="text"
+		            class="form-control"
+		            id="first_name"
+		            formControlName="first_name"
+			    />
+			    <span 
+			    	*ngIf="!userForm.get('first_name').valid && userForm.get('first_name').touched"
+			    	class="badge bg-danger text-light">First name is required</span>
+			  </div>
+			  <div class="col-md-6">
+			    <label for="inputLastName" class="form-label">Last Name</label>
+			    <input 
+			    	type="text"
+		            class="form-control"
+		            id="last_name"
+		            formControlName="last_name"
+			    />
+			    <span 
+			    	*ngIf="!userForm.get('last_name').valid && userForm.get('last_name').touched"
+			    	class="badge bg-danger text-light">Last name is required</span>
+			  </div>
+			  <div class="col-md-6">
+			    <label for="inputEmail" class="form-label">Email Address</label>
+			    <input 
+			    	type="text"
+		            class="form-control"
+		            id="email"
+		            formControlName="email"
+			    />
+			    <span 
+			    	*ngIf="!userForm.get('email').valid && userForm.get('email').touched"
+			    	class="badge bg-danger text-light">Enter valid email address</span>
+			  </div>
+			  <div class="col-md-6">
+			    <label for="inputPhone" class="form-label">Phone</label>
+			    <input 
+			    	type="text"
+		            class="form-control"
+		            id="phone"
+		            formControlName="phone"
+			    />
+			    <span 
+			    	*ngIf="!userForm.get('phone').valid && userForm.get('phone').touched"
+			    	class="badge bg-danger text-light">Enter valid phone number</span>
+			  </div>							  		  	
+			  <div class="col-12">
+			  	<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+			    	<button 
+			    		type="submit" 
+			    		class="btn btn-primary"
+			    		[disabled]="!userForm.valid"
+			    	>Save</button>
+					</div>
+			  </div>
+		</form>
+    </div>
+  </div>
+</div>

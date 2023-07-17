@@ -1,68 +1,15 @@
 <div class="container">
 <div class="row">
-	<div class="col-6">
+	<div class="col-8">
 		<div class="card mt-5 mb-5">
-		  <h5 class="card-header" *ngIf="submitMode=='add'">Add	User</h5>
-		  <h5 class="card-header" *ngIf="submitMode=='edit'">Edit	User</h5>
+		  <h5 class="card-header">Add	User Form</h5>
 		  <div class="card-body">
-		    <form class="row g-3" #userForm="ngForm" (ngSubmit)="onCreateUpdateUser(userForm.value)">
-				  <div class="col-md-6">
-				    <label for="inputFirstName" class="form-label">First Name</label>
-				    <input 
-				    	type="text"
-			            class="form-control"
-			            id="first_name"
-			            required
-			            [ngModel] = 'firstName'
-			            name="first_name"
-				    />
-				  </div>
-				  <div class="col-md-6">
-				    <label for="inputLastName" class="form-label">Last Name</label>
-				    <input 
-				    	type="text"
-			            class="form-control"
-			            id="last_name"
-			            required
-			            [ngModel] = 'lastName'
-			            name="last_name"
-				    />
-				  </div>
-				  <div class="col-md-6">
-				    <label for="inputEmail" class="form-label">Email Address</label>
-				    <input 
-				    	type="text"
-			            class="form-control"
-			            id="email"
-			            required
-			            email
-			            [ngModel] = 'emailAddress'
-			            name="email"
-			            #email="ngModel"
-				    />
-				    <span class="badge bg-danger" *ngIf="!email.valid && email.touched">Email address invalid</span>
-				  </div>
-				  <div class="col-md-6">
-				    <label for="inputPhone" class="form-label">Phone</label>
-				    <input 
-				    	type="text"
-			            class="form-control"
-			            id="phone"
-			            required
-			            [ngModel] = 'phone'
-			            name="phone"
-				    />
-				  </div>
-				  <div class="col-12">
-				  	<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-				    	<button 
-				    		type="submit" 
-				    		class="btn btn-primary"
-				    		[disabled]="!userForm.valid"
-				    	>Save</button>
-					</div>
-				  </div>
-			</form>
+		    	<app-user-form
+		    		[userDetail] = "userDetail"
+		    		[resetForm] = "resetForm"
+		    		(addUser) = "onAddUser($event)"
+		    		(editUser) = "onEditUser($event)"
+		    	></app-user-form>
 		  </div>
 		</div>
 	</div>
@@ -73,15 +20,21 @@
       <button
         class="btn btn-danger"
         [disabled]="loadedUsers.length < 1"
-        (click)="onDeleteUsers()"
-      >
+        (click)="onDeleteUsers()">
         Drop All Users
       </button>
+      <button 
+    		type="button" 
+    		class="btn btn-info mr-5"
+    		(click)="resetUserForm()"
+    		*ngIf="userId disabled">
+    	Add New User
+    	</button>
     </div>
   </div>
 
 <div class="row">
-	<div class="col-10">
+	<div class="col-12">
 		<p class="mt-3" *ngIf="loadedUsers.length < 1 && !isFetching">No users available!</p>
 		<p *ngIf="isFetching && !error">Loading users...</p>
 		<div class="alert alert-danger" *ngIf="error">
@@ -89,45 +42,32 @@
 			<p>{{ error }}</p>
 			<button class="btn btn-info btn-sm" (click)="onHandleError()">Close</button>
 		</div>
-		<table class="table" *ngIf="loadedUsers.length >= 1 && !isFetching">
-		  <thead>
-		    <tr>
-		      <th scope="col">First Name</th>
-		      <th scope="col">Last Name</th>
-		      <th scope="col">Email Address</th>
-		      <th scope="col">Phone</th>
-		      <th scope="col">Action</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr *ngFor="let users of loadedUsers">
-		      <td>{{ users.first_name }}</td>
-		      <td>{{ users.last_name }}</td>
-		      <td>{{ users.email }}</td>
-		      <td>{{ users.phone }}</td>
-		      <td>
-		      	<a href="" 
-		      		class="btn btn-warning btn-sm"
-		      		[routerLink]="['/user', users.id]"
-		      		>
-		      		View
-		      	</a>
-		      	<button 
-		      		class="btn btn-info btn-sm"
-		      		(click)="onEdit(users)"
-		      		>
-		        	Edit
-		      	</button>
-		      	<button 
-		      		class="btn btn-danger btn-sm"
-		      		(click)="onDeleteUser(users)"
-		      		>
-		        	Delete
-		      	</button>	     	
-		      </td>
-		    </tr>		    
-		  </tbody>
-		</table>
+		<div class="container" *ngIf="loadedUsers.length >= 1 && !isFetching">
+  		<div class="row border-bottom border-1">
+  			<div class="col-2 title">
+  				First Name
+  			</div>
+  			<div class="col-2 title">
+  				Last Name
+  			</div>
+  			<div class="col-3 title">
+  				Email Address
+  			</div>
+  			<div class="col-2 title">
+  				Phone
+  			</div>
+  			<div class="col-3 title">
+  				Action
+  			</div>
+  		</div>
+  		<app-user-detail 
+		    *ngFor="let user of loadedUsers"
+		    [userDetail]="user"
+		    (editUser)="editUser($event)"
+		    (deleteUser)="onDeleteUser($event)"
+		  ></app-user-detail>
+  	</div>
+
 	</div>
 </div>
 

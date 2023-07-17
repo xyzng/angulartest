@@ -2,23 +2,23 @@
 	<div class="row">
 		<div class="col-8">
 			<div class="card mt-5 mb-5">
-			  <h5 class="card-header">User Detail for {{ userDetail['firstName'] }}</h5>
+			  <h5 class="card-header">User Detail</h5>
 			  <div class="card-body">
 					  <div class="col-md-12">
 					    <label for="inputFirstName" class="form-label"><strong>First Name: </strong></label>
-					    {{ userDetail['firstName'] }}
+					    {{ userData.first_name }}
 					  </div>
 					  <div class="col-md-6">
 					    <label for="inputLastName" class="form-label"><strong>Last Name: </strong></label>
-					    {{ userDetail['lastName'] }}
+					    {{ userData.last_name }}
 					  </div>
 					  <div class="col-md-6">
 					    <label for="inputEmail" class="form-label"><strong>Email Address: </strong></label>
-					    {{ userDetail['emailAddress'] }}
+					    {{ userData.email }}
 					  </div>
 					  <div class="col-md-6">
 					    <label for="inputPhone" class="form-label"><strong>Phone: </strong></label>
-					    {{ userDetail['phone'] }}
+					    {{ userData.phone }}
 					  </div>					  
 			  </div>
 			  <div class="card-footer">

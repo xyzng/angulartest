@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
-import { NgForm } from '@angular/forms';
-
 import { User } from './user.model';
 import { UsersService } from './users.service';
 
@@ -16,72 +14,27 @@ import { UsersService } from './users.service';
 export class UsersComponent implements OnInit, OnDestroy {
 
   loadedUsers: User[] = [];
-  isFetching = false;
+  
+  isFetching: boolean = false;
   error = null;
+
+  userDetail: any = [];
+  userId: string = null;
+  resetForm: boolean = false;
 
   private errorSub: Subscription;
   
-  @ViewChild('userForm') userForm: NgForm;
-
-  submitMode = 'add';
-  firstName = '';
-  lastName = '';
-  emailAddress = '';
-  phone = '';
-  userId = null;
-
-  constructor(private http: HttpClient, private usersService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
   ngOnInit() {
+
     this.errorSub = this.usersService.error.subscribe(errorMessage => {
       this.error = errorMessage;
     });
 
     // get the users on component init
     this.onFetchUsers();
-  }
 
-  onCreateUpdateUser(userData: User) {
-    
-    // Debug form
-    console.log(this.userForm);
-
-    if(this.submitMode == 'add') {
-      console.log('add user');
-      // send user data to endpoint
-      this.usersService.createUser(userData.first_name, 
-                                           userData.last_name,
-                                           userData.email,
-                                           userData.phone,
-                                           ).subscribe(() => {
-                                              this.onFetchUsers();
-
-                                              // clear form when adding user
-                                              this.userForm.reset();
-                                          }
-                                        );
-    }
-
-    if(this.submitMode == 'edit') {
-      console.log('edit user ');
-      // send user data to endpoint
-      this.usersService.editUser(userData.first_name, 
-                                           userData.last_name,
-                                           userData.email,
-                                           userData.phone,
-                                           this.userId
-                                           ).subscribe(() => {
-                                              this.onFetchUsers();
-
-                                              // clear and switch back the submit mode to `add`
-                                              this.userForm.reset();
-                                              this.submitMode = 'add';
-                                          }
-                                        );
-      
-    }
-
-    
   }
 
   onFetchUsers() {
@@ -101,16 +54,68 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   }
 
-  onEdit(userData: User) {
-    this.firstName = userData.first_name;
-    this.lastName = userData.last_name;
-    this.emailAddress = userData.email;
-    this.phone = userData.phone;
-    this.userId = userData.id;
+  onAddUser(formData: any) {
 
-    this.submitMode = 'edit';
+    const user = formData.value;
 
+    this.usersService
+        .createUser(user.first_name, 
+                    user.last_name,
+                    user.email,
+                    user.phone,
+                   )
+        .subscribe(resData => {
+                        
+            console.log(resData);    
+
+            const key = resData.name;            
+            this.loadedUsers.push({ ...user, id: key });
+
+          }
+        );
+
+
+  }
+
+  onEditUser(formData: any) {
+
+    console.log(formData.value);
+    
+    const user = formData.value;
+    //const userId = this.userId;
+    const userId = this.userId;
+    this.usersService
+        .editUser(user.first_name, 
+                  user.last_name,
+                  user.email,
+                  user.phone,
+                  userId
+                  )
+        .subscribe(() => {
+            
+            this.onFetchUsers();            
+
+        }
+      );
+  }
+
+  editUser2(userData: User) {
+    console.log('bbom'); 
     console.log(userData);
+  }
+
+  editUser(userData: User) {
+    //console.log(userData);
+    this.resetForm = false;
+    this.userDetail = userData;
+    this.userId = userData.id;
+    console.log('user-component: user id = '+this.userId);
+    
+  }
+
+  resetUserForm() {
+    this.resetForm = true;
+    this.userId = null;
   }
 
   onDeleteUser(userData: User) {
@@ -130,7 +135,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     // Send Http request to endpoint and drop users data
     this.usersService.deleteUsers().subscribe(() => {
       this.loadedUsers = [];
-      this.userForm.reset();
     });
   }
 
